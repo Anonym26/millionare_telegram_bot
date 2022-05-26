@@ -58,7 +58,6 @@ async def cmd_exit(message: types.message):
     except Exception as Ex:
         print(f'{Ex}. Работаем дальше.')
     finally:
-        users_db.add_balance()
         users.clear()
 
 

@@ -2,8 +2,6 @@ from main import bot, anti_flood, dp, users_db
 from aiogram import types
 from config import payments_token
 
-price_list = {}
-
 
 async def send_offer(user_id, price: int):
     await bot.send_invoice(user_id,
@@ -35,7 +33,4 @@ async def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery)
 async def process_successful_payment(message: types.Message):
     invoice_payload = message.successful_payment.to_python()['invoice_payload']
     users_db.add_balance(invoice_payload, message.from_user.id)
-    print(invoice_payload)
     return
-
-
