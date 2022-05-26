@@ -28,11 +28,11 @@ async def anti_flood(*args, **kwargs):
     await m.answer("Не флуди...")
 
 
-async def send_to_admin(dp):
+async def on_startup(dispatcher: Dispatcher):
     await bot.send_message(chat_id=admin_id, text=f"bot_started")
 
 
-async def send_to_admin_shd(dp):
+async def on_shutdown(dispatcher: Dispatcher):
     """Закрывает соединение с БД и выводит сообщение"""
     users_db.close()
     await bot.send_message(chat_id=admin_id, text=f"bot_stoped")
@@ -42,5 +42,4 @@ if __name__ == '__main__':
     # Запуск бота
     from app.handlers.commands import dp
 
-    executor.start_polling(dp, on_startup=send_to_admin, on_shutdown=send_to_admin_shd, skip_updates=True)
-    import app.handlers
+    executor.start_polling(dp, on_startup=on_startup, on_shutdown=on_shutdown, skip_updates=True)

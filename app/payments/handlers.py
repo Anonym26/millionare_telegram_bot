@@ -1,4 +1,4 @@
-from main import bot, anti_flood, dp
+from main import bot, anti_flood, dp, users_db
 from aiogram import types
 from config import payments_token
 
@@ -34,5 +34,8 @@ async def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery)
 @dp.message_handler(content_types=types.ContentType.SUCCESSFUL_PAYMENT)
 async def process_successful_payment(message: types.Message):
     invoice_payload = message.successful_payment.to_python()['invoice_payload']
+    users_db.add_balance(invoice_payload, message.from_user.id)
     print(invoice_payload)
     return
+
+

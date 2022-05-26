@@ -1,5 +1,5 @@
 import sqlite3
-from time import time, sleep
+from time import time
 
 
 # создаем класс пользователей нашего телеграмм бота
@@ -13,7 +13,7 @@ class UsersCRUD:  # create read update delete
         user_name VARCHAR(32) NOT NULL,
         user_ref VARCHAR(16) NOT NULL, 
         sub INT NOT NULL,
-        balance INT NOT NULL DEFAULT 0)""")
+        balance INT NOT NULL DEFAULT 10)""")
 
         # создаем курсор
         self.cursor = self.conn.cursor()
@@ -49,11 +49,17 @@ class UsersCRUD:  # create read update delete
                                     (user_id,)).fetchone()
         return count[0]
 
+    def add_balance(self, summa, user_id):
+        """После пополнения, добавляет балланс на счет пользователя
+        и 10% от суммы пополнения на счет реферала (при наличии) """
+        self.cursor.execute("""UPDATE users SET balance = balance + ? WHERE user_id = ?""", (summa, user_id))
+        user_ref = self.cursor.execute("""SELECT user_ref FROM users WHERE user_id=?""", (user_id,)).fetchone()
+        if user_ref[0]:
+            summa_ref = int(int(summa) / 10)
+            self.cursor.execute("""UPDATE users SET balance = balance + ? WHERE user_id = ?""",
+                                (summa_ref, user_ref[0]))
+        self.conn.commit()
+
     def close(self):
         """Закрываем соединение с БД"""
         self.conn.close()
-        print('Соединение закрыто')
-
-# db = UsersCRUD()
-# db.add_new_user(5, 'three', user_ref=9)
-# db.close()
