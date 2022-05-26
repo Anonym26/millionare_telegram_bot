@@ -50,7 +50,7 @@ class UsersCRUD:  # create read update delete
         return count[0]
 
     def add_balance(self, summa, user_id):
-        """После пополнения, добавляет балланс на счет пользователя
+        """После пополнения, добавляет баланс на счет пользователя
         и 10% от суммы пополнения на счет реферала (при наличии) """
         self.cursor.execute("""UPDATE users SET balance = balance + ? WHERE user_id = ?""", (summa, user_id))
         user_ref = self.cursor.execute("""SELECT user_ref FROM users WHERE user_id=?""", (user_id,)).fetchone()

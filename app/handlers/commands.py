@@ -71,3 +71,9 @@ async def ref_funk(message: types.Message):
     return await message.answer(refs + '\nВаша реф ссылка: ' + link)
 
 
+@dp.message_handler(commands=['balance'])
+async def show_balance(message: types.Message):
+    """Показывает баланс пользователя"""
+    balance = users_db.cursor.execute("""SELECT balance FROM users WHERE user_id = ?""",
+                                      (message.from_user.id,)).fetchone()
+    return await message.answer(f"Ваш баланс: {balance[0]} кои" + count_text(balance[0], ['н', 'на', 'нов']))
