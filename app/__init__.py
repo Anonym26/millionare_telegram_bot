@@ -1,3 +1,3 @@
-from .handlers import dp
+from .handlers import *
+from .payments.handlers import *
 
-__all__ = ['dp']

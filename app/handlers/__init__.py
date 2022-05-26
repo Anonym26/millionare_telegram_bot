@@ -1,5 +1,4 @@
-from .commands import dp
-from .quiz import dp
-from .hints import dp
+from .commands import *
+from .quiz import *
+from .hints import *
 
-__all__ = ['dp']
