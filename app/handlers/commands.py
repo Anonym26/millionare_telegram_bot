@@ -10,6 +10,7 @@ from main import dp, bot, users_db
 async def cmd_start(message: types.Message):
     """В ответ на команду start выводит сообщение о начале игры и соответствующую кнопку и обнуляет счетчики вопросов и
      выйгрыша"""
+    await message.delete()
     user_ref = 0 if len(message.text.split()) < 2 else message.text.split()[1]
     try:
         await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id - 1)
@@ -39,6 +40,7 @@ async def cmd_start(message: types.Message):
 @dp.message_handler(commands='help')
 async def cmd_help(message: types.Message):
     """Выводит клавиатуру с возможными подсказками (если они не использованы)"""
+    await message.delete()
     user_id = str(message.from_user.id)
     if int(users.get(user_id + '_score', 0)):
         keyboard = types.InlineKeyboardMarkup(row_width=2)
@@ -54,6 +56,7 @@ async def cmd_help(message: types.Message):
 @dp.message_handler(commands='exit')
 async def cmd_exit(message: types.message):
     """В ответ на команду exit обнуляет счетчики вопросов и выйгрыша и завершает игру"""
+    await message.delete()
     try:
         await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id - 1)
     except Exception as Ex:
@@ -66,6 +69,7 @@ async def cmd_exit(message: types.message):
 @dp.message_handler(commands=['ref'])
 async def ref_funk(message: types.Message):
     """Формирует реферальную ссылку для пользователя вызвавшего метод"""
+    await message.delete()
     count_users = users_db.count_ref(message.from_user.id)
     refs = f'Вы пригласили {count_users} пользовател' + count_text(count_users, ['я', 'eй', 'ей'])
     link = 'https://t.me/imsr_su_bot?start=' + str(message.from_user.id)
@@ -82,6 +86,7 @@ async def show_balance(message: types.Message):
 
 @dp.message_handler(commands=['buy'])
 async def buy_help(message: types.Message):
+    await message.delete()
     keyboard = types.InlineKeyboardMarkup(row_width=2)
     buttons = [
         types.InlineKeyboardButton('50/50\n 50$', callback_data='hints_buy'),
