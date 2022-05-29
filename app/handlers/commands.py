@@ -16,7 +16,8 @@ async def cmd_start(message: types.Message):
     except Exception as Ex:
         print(f'{Ex}. Работаем дальше.')
     finally:
-        if users_db.add_new_user(user_id=message.from_user.id, user_name=message.from_user.first_name, user_ref=user_ref):
+        if users_db.add_new_user(user_id=message.from_user.id, user_name=message.from_user.first_name,
+                                 user_ref=user_ref):
             await message.answer("Опа, новенький!\nДержи 10 приветственных коинов!")
         else:
             await message.answer("И снова здраствуйте!")
@@ -77,3 +78,14 @@ async def show_balance(message: types.Message):
     balance = users_db.cursor.execute("""SELECT balance FROM users WHERE user_id = ?""",
                                       (message.from_user.id,)).fetchone()
     return await message.answer(f"Ваш баланс: {balance[0]} кои" + count_text(balance[0], ['н', 'на', 'нов']))
+
+
+@dp.message_handler(commands=['buy'])
+async def buy_help(message: types.Message):
+    keyboard = types.InlineKeyboardMarkup(row_width=2)
+    buttons = [
+        types.InlineKeyboardButton('50/50\n 50$', callback_data='hints_buy'),
+        types.InlineKeyboardButton('Помощь зала\n 50$', callback_data='hints_buy')
+    ]
+    keyboard.add(*buttons)
+    await bot.send_message(chat_id=message.from_user.id, text='Выберите подсказку для покупки', reply_markup=keyboard)

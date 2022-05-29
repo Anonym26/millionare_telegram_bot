@@ -43,3 +43,4 @@ if __name__ == '__main__':
     from app.handlers.commands import dp
 
     executor.start_polling(dp, on_startup=on_startup, on_shutdown=on_shutdown, skip_updates=True)
+    import app.handlers

@@ -60,6 +60,17 @@ class UsersCRUD:  # create read update delete
                                 (summa_ref, user_ref[0]))
         self.conn.commit()
 
+    def decr_balance(self, price, user_id):
+        """Уменьшает баланс пользователя на сумму покупки.
+        При этом 10% от суммы идет на счет реферала (при наличии)"""
+        self.cursor.execute("""UPDATE users SET balance = balance - ? WHERE user_id = ?""", (price, user_id))
+        user_ref = self.cursor.execute("""SELECT user_ref FROM users WHERE user_id=?""", (user_id,)).fetchone()
+        if user_ref[0]:
+            summa_ref = int(int(price) / 10)
+            self.cursor.execute("""UPDATE users SET balance = balance + ? WHERE user_id = ?""",
+                                (summa_ref, user_ref[0]))
+        self.conn.commit()
+
     def close(self):
         """Закрываем соединение с БД"""
         self.conn.close()

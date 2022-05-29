@@ -38,12 +38,12 @@ async def send_nest_question(call: types.CallbackQuery):
 
 
 @dp.callback_query_handler(text='correct_answer')
-async def send_nest_question(call: types.CallbackQuery):
+async def send_next_question(call: types.CallbackQuery):
     """Используя функцию get_question получает вопрос и список ответов и выводит на экран"""
     await call.message.delete_reply_markup()
 
     user_id = str(call.from_user.id)
-    question = int(users.get(user_id + '_score'))
+    question = int(users.get(user_id + '_score', 0))
     balance = users.setdefault(user_id + '_balance', win_sum[0])
     if question <= 14:
         await call.answer(text=f'Поздравляем!\nВы выйграли {balance} рублей!', show_alert=True)
