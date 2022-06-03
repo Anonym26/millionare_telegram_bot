@@ -95,15 +95,3 @@ async def cmd_status_sub(message: types.Message):
     user_id = message.from_user.id
     user = users_db.get_user_by_user_id(user_id).get_sub_time_text()
     return await message.answer(user)
-
-
-# @dp.message_handler(commands=['buy_sub'])
-# async def buy_sub(message: types.Message):
-#     await message.delete()
-#     keyboard = types.InlineKeyboardMarkup(row_width=2)
-#     buttons = [
-#         types.InlineKeyboardButton('50/50\n 50$', callback_data='hints_buy'),
-#         types.InlineKeyboardButton('Помощь зала\n 50$', callback_data='hints_buy')
-#     ]
-#     keyboard.add(*buttons)
-#     await bot.send_message(chat_id=message.from_user.id, text='Выберите подсказку для покупки', reply_markup=keyboard)

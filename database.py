@@ -1,5 +1,6 @@
 import sqlite3
 from time import time
+
 from modeles import User
 
 
@@ -62,35 +63,6 @@ class UsersCRUD:  # create read update delete
                                                                                               data.balance, data.id))
         self.conn.commit()
 
-    # def add_balance(self, summa, user_id):
-    #     """После пополнения, добавляет баланс на счет пользователя
-    #     и 10% от суммы пополнения на счет реферала (при наличии) """
-    #     self.cursor.execute("""UPDATE users SET balance = balance + ? WHERE user_id = ?""", (summa, user_id))
-    #     user_ref = self.cursor.execute("""SELECT user_ref FROM users WHERE user_id=?""", (user_id,)).fetchone()
-    #     if user_ref[0]:
-    #         summa_ref = int(int(summa) / 10)
-    #         self.cursor.execute("""UPDATE users SET balance = balance + ? WHERE user_id = ?""",
-    #                             (summa_ref, user_ref[0]))
-    #     self.conn.commit()
-    #
-    # def decr_balance(self, price, user_id):
-    #     """Уменьшает баланс пользователя на сумму покупки.
-    #     При этом 10% от суммы идет на счет реферала (при наличии)"""
-    #     self.cursor.execute("""UPDATE users SET balance = balance - ? WHERE user_id = ?""", (price, user_id))
-    #     user_ref = self.cursor.execute("""SELECT user_ref FROM users WHERE user_id=?""", (user_id,)).fetchone()
-    #     if user_ref[0]:
-    #         summa_ref = int(int(price) / 10)
-    #         self.cursor.execute("""UPDATE users SET balance = balance + ? WHERE user_id = ?""",
-    #                             (summa_ref, user_ref[0]))
-    #     self.conn.commit()
-
     def close(self):
         """Закрываем соединение с БД"""
         self.conn.close()
-
-
-# db = UsersCRUD()
-# user = db.get_user_by_user_id('1942536295')
-# user.buy_sub(10)
-# db.update_user(user)
-# db.close()
