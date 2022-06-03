@@ -38,9 +38,8 @@ async def process_successful_payment(message: types.Message):
     user.balance += int(invoice_payload)
     users_db.update_user(user)
 
-    user_id_ref = user.ref
-    user_ref = users_db.get_user_by_user_id(user_id_ref)
-    user_ref.balance += int(int(invoice_payload) / 10)
-    users_db.update_user(user_ref)
-
+    if user.ref:
+        user_ref = users_db.get_user_by_user_id(user.ref)
+        user_ref.balance += int(int(invoice_payload) / 10)
+        users_db.update_user(user_ref)
     return

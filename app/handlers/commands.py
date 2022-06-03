@@ -82,9 +82,12 @@ async def ref_funk(message: types.Message):
 @dp.message_handler(commands=['balance'])
 async def show_balance(message: types.Message):
     """Показывает баланс пользователя"""
-    balance = users_db.cursor.execute("""SELECT balance FROM users WHERE user_id = ?""",
-                                      (message.from_user.id,)).fetchone()
-    return await message.answer(f"Ваш баланс: {balance[0]} кои" + count_text(balance[0], ['н', 'на', 'нов']))
+    user_id = message.from_user.id
+    user = users_db.get_user_by_user_id(user_id).balance
+
+    # balance = users_db.cursor.execute("""SELECT balance FROM users WHERE user_id = ?""",
+    #                                   (message.from_user.id,)).fetchone()
+    return await message.answer(f"Ваш баланс: {user} кои" + count_text(user, ['н', 'на', 'нов']))
 
 
 @dp.message_handler(commands=['buy_sub'])
