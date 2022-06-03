@@ -82,21 +82,28 @@ async def ref_funk(message: types.Message):
 @dp.message_handler(commands=['balance'])
 async def show_balance(message: types.Message):
     """Показывает баланс пользователя"""
+    await message.delete()
     user_id = message.from_user.id
     user = users_db.get_user_by_user_id(user_id).balance
-
-    # balance = users_db.cursor.execute("""SELECT balance FROM users WHERE user_id = ?""",
-    #                                   (message.from_user.id,)).fetchone()
     return await message.answer(f"Ваш баланс: {user} кои" + count_text(user, ['н', 'на', 'нов']))
 
 
-@dp.message_handler(commands=['buy_sub'])
-async def buy_sub(message: types.Message):
+@dp.message_handler(commands=['status_sub'])
+async def cmd_status_sub(message: types.Message):
+    """Показывает статус подписки"""
     await message.delete()
-    keyboard = types.InlineKeyboardMarkup(row_width=2)
-    buttons = [
-        types.InlineKeyboardButton('50/50\n 50$', callback_data='hints_buy'),
-        types.InlineKeyboardButton('Помощь зала\n 50$', callback_data='hints_buy')
-    ]
-    keyboard.add(*buttons)
-    await bot.send_message(chat_id=message.from_user.id, text='Выберите подсказку для покупки', reply_markup=keyboard)
+    user_id = message.from_user.id
+    user = users_db.get_user_by_user_id(user_id).get_sub_time_text()
+    return await message.answer(user)
+
+
+# @dp.message_handler(commands=['buy_sub'])
+# async def buy_sub(message: types.Message):
+#     await message.delete()
+#     keyboard = types.InlineKeyboardMarkup(row_width=2)
+#     buttons = [
+#         types.InlineKeyboardButton('50/50\n 50$', callback_data='hints_buy'),
+#         types.InlineKeyboardButton('Помощь зала\n 50$', callback_data='hints_buy')
+#     ]
+#     keyboard.add(*buttons)
+#     await bot.send_message(chat_id=message.from_user.id, text='Выберите подсказку для покупки', reply_markup=keyboard)

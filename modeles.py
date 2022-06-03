@@ -55,6 +55,9 @@ class User:
         return self.__dict__
 
     def get_sub_time_text(self):
+        """Выводит информацию о статусе подписки:
+        - либо закончилась;
+        - либо сколько осталось"""
         if not self.check_sub():
             return 'Ваша подписка закончилась'
         s_time = self.sub - int(time())
