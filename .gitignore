@@ -2,3 +2,4 @@ config.py
 .idea/
 **/__pycache__
 users.db
+users.db-journal
