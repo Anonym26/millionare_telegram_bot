@@ -8,32 +8,35 @@ from main import dp, bot, users_db
 # обработчик команды start
 @dp.message_handler(commands=['start'])
 async def cmd_start(message: types.Message):
-    """В ответ на команду start выводит сообщение о начале игры и соответствующую кнопку и обнуляет счетчики вопросов и
-     выйгрыша"""
+    """В ответ на команду start выводит сообщение о начале игры
+    и соответствующую кнопку и обнуляет счетчики вопросов
+    и выйгрыша"""
     await message.delete()
     user_ref = 0 if len(message.text.split()) < 2 else message.text.split()[1]
+
     try:
         await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id - 1)
     except Exception as Ex:
         print(f'{Ex}. Работаем дальше.')
-    finally:
-        if users_db.add_new_user(user_id=message.from_user.id, user_name=message.from_user.first_name,
-                                 user_ref=user_ref):
-            await message.answer("Опа, новенький!\nДержи 10 приветственных коинов!")
-        else:
-            await message.answer("И снова здраствуйте!")
 
-        keyboard = types.InlineKeyboardMarkup()
-        keyboard.add(types.InlineKeyboardButton(text='Начать игру', callback_data='start_quiz'))
-        await bot.send_message(chat_id=message.from_user.id,
-                               text='Добро пожаловать на игру: "Кто хочет стать милионнером?"\n\n'
-                                    'Вам необходимо ответить на 15 вопросов, которые разделенны на 4 категории '
-                                    'сложности. '
-                                    'Ответив на все 15 вопросов Вы получите 1 000 000 рублей. Ответив неверно, Вы '
-                                    'проиграете и останетесь с несгораемой суммой до которой успели дойти.\n',
-                               reply_markup=keyboard)
+    if users_db.add_new_user(user_id=message.from_user.id,
+                             user_name=message.from_user.first_name,
+                             user_ref=user_ref):
+        await message.answer("Опа, новенький!\nДержи 10 приветственных коинов!")
+    else:
+        await message.answer("И снова здраствуйте!")
 
-        users.clear()
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.add(types.InlineKeyboardButton(text='Начать игру', callback_data='start_quiz'))
+
+    await bot.send_message(chat_id=message.from_user.id,
+                           text='Добро пожаловать на игру: "Кто хочет стать милионнером?"\n\n'
+                                'Вам необходимо ответить на 15 вопросов, которые разделенны на 4 категории '
+                                'сложности. '
+                                'Ответив на все 15 вопросов Вы получите 1 000 000 рублей. Ответив неверно, Вы '
+                                'проиграете и останетесь с несгораемой суммой до которой успели дойти.\n',
+                           reply_markup=keyboard)
+    users.clear()
 
 
 # обработчик команды help
@@ -54,7 +57,7 @@ async def cmd_help(message: types.Message):
 
 # обработчик команды exit
 @dp.message_handler(commands='exit')
-async def cmd_exit(message: types.message):
+async def cmd_exit(message: types.Message):
     """В ответ на команду exit обнуляет счетчики вопросов и выйгрыша и завершает игру"""
     await message.delete()
     try:
@@ -84,8 +87,8 @@ async def show_balance(message: types.Message):
     return await message.answer(f"Ваш баланс: {balance[0]} кои" + count_text(balance[0], ['н', 'на', 'нов']))
 
 
-@dp.message_handler(commands=['buy'])
-async def buy_help(message: types.Message):
+@dp.message_handler(commands=['buy_sub'])
+async def buy_sub(message: types.Message):
     await message.delete()
     keyboard = types.InlineKeyboardMarkup(row_width=2)
     buttons = [

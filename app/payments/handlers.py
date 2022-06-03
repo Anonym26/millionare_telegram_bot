@@ -32,5 +32,15 @@ async def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery)
 @dp.message_handler(content_types=types.ContentType.SUCCESSFUL_PAYMENT)
 async def process_successful_payment(message: types.Message):
     invoice_payload = message.successful_payment.to_python()['invoice_payload']
-    users_db.add_balance(invoice_payload, message.from_user.id)
+
+    user_id = message.from_user.id
+    user = users_db.get_user_by_user_id(user_id)
+    user.balance += int(invoice_payload)
+    users_db.update_user(user)
+
+    user_id_ref = user.ref
+    user_ref = users_db.get_user_by_user_id(user_id_ref)
+    user_ref.balance += int(int(invoice_payload) / 10)
+    users_db.update_user(user_ref)
+
     return
